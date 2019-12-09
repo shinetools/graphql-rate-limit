@@ -1,0 +1,9 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import test from 'ava';
+import { SchemaDirectiveVisitor } from 'graphql-tools';
+import { createRateLimitDirective } from './field-directive';
+test('createRateLimitDirective', t => {
+    const RateLimiter = createRateLimitDirective();
+    t.true(new RateLimiter({}) instanceof SchemaDirectiveVisitor);
+});
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZmllbGQtZGlyZWN0aXZlLnNwZWMuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9zcmMvbGliL2ZpZWxkLWRpcmVjdGl2ZS5zcGVjLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLDZEQUE2RDtBQUM3RCxPQUFPLElBQUksTUFBTSxLQUFLLENBQUM7QUFDdkIsT0FBTyxFQUFFLHNCQUFzQixFQUFFLE1BQU0sZUFBZSxDQUFDO0FBQ3ZELE9BQU8sRUFBRSx3QkFBd0IsRUFBRSxNQUFNLG1CQUFtQixDQUFDO0FBRTdELElBQUksQ0FBQywwQkFBMEIsRUFBRSxDQUFDLENBQUMsRUFBRTtJQUNuQyxNQUFNLFdBQVcsR0FBRyx3QkFBd0IsRUFBRSxDQUFDO0lBQy9DLENBQUMsQ0FBQyxJQUFJLENBQUMsSUFBSSxXQUFXLENBQUMsRUFBRSxDQUFDLFlBQVksc0JBQXNCLENBQUMsQ0FBQztBQUNoRSxDQUFDLENBQUMsQ0FBQyJ9
