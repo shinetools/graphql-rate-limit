@@ -55,7 +55,7 @@ const createRateLimitDirective = (
       const { resolve = defaultFieldResolver } = field;
       // eslint-disable-next-line no-param-reassign
       field.resolve = async (parent, args, context, info) => {
-        const errorMessage = await rateLimiter(
+        const { errorMessage, reset } = await rateLimiter(
           {
             parent,
             args,
@@ -69,7 +69,12 @@ const createRateLimitDirective = (
           throw new RateLimitError(errorMessage);
         }
 
-        return resolve(parent, args, context, info);
+        return resolve(
+          parent,
+          args,
+          { ...context, resetRateLimit: reset },
+          info
+        );
       };
     }
   }

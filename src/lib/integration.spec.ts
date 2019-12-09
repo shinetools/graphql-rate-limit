@@ -89,7 +89,7 @@ test('rate limit with base rate limiter', async t => {
     resolvers: {
       Query: {
         test: async (parent, args, context, info) => {
-          const errorMessage = await rateLimiter(
+          const { errorMessage } = await rateLimiter(
             { parent, args, context, info },
             { max: 1, window: '1s' }
           );

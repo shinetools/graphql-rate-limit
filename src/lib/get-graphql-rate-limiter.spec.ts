@@ -65,9 +65,9 @@ test('getGraphQLRateLimiter with an empty store passes, but second time fails', 
     context: { id: '1' },
     info: ({ fieldName: 'myField' } as any) as GraphQLResolveInfo
   };
-  t.falsy(await rateLimit(field, config));
+  t.falsy((await rateLimit(field, config)).errorMessage);
   t.is(
-    await rateLimit(field, config),
+    (await rateLimit(field, config)).errorMessage,
     `You are trying to access 'myField' too often`
   );
 });
@@ -84,13 +84,13 @@ test('getGraphQLRateLimiter timestamps should expire', async t => {
     context: { id: '1' },
     info: ({ fieldName: 'myField' } as any) as GraphQLResolveInfo
   };
-  t.falsy(await rateLimit(field, config));
+  t.falsy((await rateLimit(field, config)).errorMessage);
   t.is(
-    await rateLimit(field, config),
+    (await rateLimit(field, config)).errorMessage,
     `You are trying to access 'myField' too often`
   );
   setTimeout(async () => {
-    t.falsy(await rateLimit(field, config));
+    t.falsy((await rateLimit(field, config)).errorMessage);
   }, 500);
 });
 
@@ -113,7 +113,7 @@ test('getGraphQLRateLimiter should limit by callCount if arrayLengthField is pas
     info: ({ fieldName: 'listOfItems' } as any) as GraphQLResolveInfo
   };
   t.is(
-    await rateLimit(field, config),
+    (await rateLimit(field, config)).errorMessage,
     `You are trying to access 'listOfItems' too often`
   );
 });
@@ -136,14 +136,16 @@ test('getGraphQLRateLimiter should allow multiple calls to a field if the identi
     context: { id: '1' },
     info: ({ fieldName: 'listOfItems' } as any) as GraphQLResolveInfo
   };
-  t.falsy(await rateLimit(field, config));
+  t.falsy((await rateLimit(field, config)).errorMessage);
   t.is(
-    await rateLimit(field, config),
+    (await rateLimit(field, config)).errorMessage,
     `You are trying to access 'listOfItems' too often`
   );
-  t.falsy(await rateLimit({ ...field, args: { id: '2' } }, config));
+  t.falsy(
+    (await rateLimit({ ...field, args: { id: '2' } }, config)).errorMessage
+  );
   t.is(
-    await rateLimit(field, config),
+    (await rateLimit(field, config)).errorMessage,
     `You are trying to access 'listOfItems' too often`
   );
 });

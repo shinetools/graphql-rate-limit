@@ -89,7 +89,10 @@ const getGraphQLRateLimiter = (
       window,
       message
     }: GraphQLRateLimitDirectiveArgs
-  ): Promise<string | undefined> => {
+  ): Promise<{
+    errorMessage: string | undefined;
+    reset: () => void | Promise<void>;
+  }> => {
     // Identify the user or client on the context
     const contextIdentity = identifyContext(context);
     // User defined window in ms that this field can be accessed for before the call is expired
@@ -137,9 +140,16 @@ const getGraphQLRateLimiter = (
       });
 
     // Returns an error message or undefined if no error
-    return filteredAccessTimestamps.length > maxCalls
-      ? errorMessage
-      : undefined;
+    return {
+      errorMessage:
+        filteredAccessTimestamps.length > maxCalls ? errorMessage : undefined,
+      reset: () =>
+        store.setForIdentity(
+          identity,
+          accessTimestamps.length ? accessTimestamps : [timestamp + windowMs],
+          windowMs
+        )
+    };
   };
 
   return rateLimiter;
