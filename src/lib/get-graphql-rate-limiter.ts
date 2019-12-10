@@ -143,12 +143,17 @@ const getGraphQLRateLimiter = (
     return {
       errorMessage:
         filteredAccessTimestamps.length > maxCalls ? errorMessage : undefined,
-      reset: () =>
-        store.setForIdentity(
+      reset: async () => {
+        const timestamps = await store.getForIdentity(identity);
+        const remainingTimestamps = timestamps.filter(t => t !== timestamp);
+        return store.setForIdentity(
           identity,
-          accessTimestamps.length ? accessTimestamps : [timestamp + windowMs],
+          remainingTimestamps.length
+            ? remainingTimestamps
+            : [timestamp + windowMs],
           windowMs
-        )
+        );
+      }
     };
   };
 
